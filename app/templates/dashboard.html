@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    <aside class="sidebar glass-panel">
+        <div class="sidebar-header">
+            <div class="logo-icon small"><i class="fas fa-brain"></i></div>
+            <h2>StudyFlow</h2>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="{{ url_for('auth.logout') }}" class="nav-item text-danger"><i class="fas fa-sign-out-alt"></i>
+                Logout</a>
+        </nav>
+
+        <div class="user-info">
+            <div class="avatar"><i class="fas fa-user"></i></div>
+            <div class="details">
+                <span class="name">{{ current_user.username }}</span>
+                <span class="role">Student</span>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <header class="top-header">
+            <h1>Overview</h1>
+            <div class="date-display" id="currentDate">Loading...</div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card glass-panel">
+                <div class="stat-icon blue"><i class="fas fa-clock"></i></div>
+                <div class="stat-details">
+                    <h3>Today's Focus</h3>
+                    <p class="stat-value" id="todayHours">0.0<span class="unit">h</span></p>
+                </div>
+            </div>
+
+            <div class="stat-card glass-panel">
+                <div class="stat-icon purple"><i class="fas fa-layer-group"></i></div>
+                <div class="stat-details">
+                    <h3>Total Hours</h3>
+                    <p class="stat-value" id="totalHours">0.0<span class="unit">h</span></p>
+                </div>
+            </div>
+
+            <div class="stat-card glass-panel">
+                <div class="stat-icon orange"><i class="fas fa-fire"></i></div>
+                <div class="stat-details">
+                    <h3>Current Streak</h3>
+                    <p class="stat-value" id="streakCount">0<span class="unit"> days</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="timer-section glass-panel">
+                <div class="section-header">
+                    <h2>Session Timer</h2>
+                </div>
+
+                <div class="timer-display">
+                    <div class="time" id="timerDisplay">00:00:00</div>
+                    <div class="status" id="timerStatus">Ready to focus?</div>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar" id="dailyProgressBar"></div>
+                </div>
+                <p class="progress-label">Daily Goal: <span id="dailyGoalProgress">0%</span></p>
+
+                <div class="timer-controls">
+                    <button class="btn btn-primary btn-large btn-glow" id="startBtn">
+                        <i class="fas fa-play"></i> Start
+                    </button>
+                    <button class="btn btn-secondary btn-large hidden" id="pauseBtn">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button class="btn btn-danger btn-large hidden" id="endBtn">
+                        <i class="fas fa-stop"></i> End Session
+                    </button>
+                </div>
+            </div>
+
+            <div class="chart-section glass-panel">
+                <div class="section-header">
+                    <h2>Weekly Activity</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="weeklyChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-section glass-panel mt-4">
+            <div class="section-header">
+                <h2>Recent Sessions</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Duration</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Completion Modal -->
+<div class="modal" id="completionModal">
+    <div class="modal-content glass-panel">
+        <div class="modal-icon success-glow"><i class="fas fa-check-circle"></i></div>
+        <h2>Session Complete!</h2>
+        <p id="motivationalMessage">Great job staying focused!</p>
+        <div class="session-summary">
+            <span class="time-logged" id="modalTimeLogged">00:00:00</span>
+            <span>logged</span>
+        </div>
+        <button class="btn btn-primary btn-block" id="closeModalBtn">Continue</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/timer.js') }}"></script>
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}
